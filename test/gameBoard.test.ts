@@ -6,6 +6,7 @@ describe("GameBoard class", () => {
     let newGame = new GameBoard();
     newGame.placeShip();
 
+    console.log(newGame.occupied);
     expect(true).toBe(true);
   });
 });

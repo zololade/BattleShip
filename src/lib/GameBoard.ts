@@ -14,21 +14,40 @@ export class GameBoard {
     for (const [_vehicle, data] of Object.entries(this.vehicles)) {
       let x = Math.floor(Math.random() * 10);
       let y = Math.floor(Math.random() * 10);
-      let direction = Math.round(Math.random());
-      let signY = y + data.length > 9 ? -1 : 1;
-      let signX = x + data.length > 9 ? -1 : 1;
-
-      let coordinate = Array.from({ length: data.length }).map(
-        (_val, index) => [
-          direction > 0 ? x + signX * index : x,
-          direction < 0 ? y + signY * index : y,
-        ],
+      let coordinate = this.coordGen(data.length, [x, y]);
+      let filledCord = new Set(
+        this.occupied.flat().map((val) => `${val[0]}, ${val[1]}`),
       );
+      let valid: boolean = false;
 
+      while (!valid) {
+        let isInOccupied = coordinate.some((val) =>
+          filledCord.has(`${val[0]}, ${val[1]}`),
+        );
+        if (!isInOccupied) {
+          valid = true;
+          break;
+        }
+        x = Math.floor(Math.random() * 10);
+        y = Math.floor(Math.random() * 10);
+        coordinate = this.coordGen(data.length, [x, y]);
+      }
       data.coordinate = coordinate;
       this.occupied.push(coordinate);
-
-      console.log(coordinate);
     }
+  }
+
+  private coordGen(len: number, [x, y]: number[]) {
+    if (typeof x === "undefined" || typeof y === "undefined") return [];
+
+    let direction = Math.round(Math.random());
+    let signY = y + len > 9 ? -1 : 1;
+    let signX = x + len > 9 ? -1 : 1;
+    let coordinate = Array.from({ length: len }).map((_val, index) => [
+      direction > 0 ? x + signX * index : x,
+      direction < 1 ? y + signY * index : y,
+    ]);
+
+    return coordinate;
   }
 }
