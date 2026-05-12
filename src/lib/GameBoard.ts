@@ -14,10 +14,15 @@ export class GameBoard {
     for (const [_vehicle, data] of Object.entries(this.vehicles)) {
       let x = Math.floor(Math.random() * 10);
       let y = Math.floor(Math.random() * 10);
-      let sign = y + data.length > 9 ? -1 : 1;
+      let direction = Math.round(Math.random());
+      let signY = y + data.length > 9 ? -1 : 1;
+      let signX = x + data.length > 9 ? -1 : 1;
 
       let coordinate = Array.from({ length: data.length }).map(
-        (_val, index) => [x, y + sign * index],
+        (_val, index) => [
+          direction > 0 ? x + signX * index : x,
+          direction < 0 ? y + signY * index : y,
+        ],
       );
 
       data.coordinate = coordinate;
