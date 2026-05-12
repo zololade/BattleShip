@@ -2,6 +2,7 @@ export class Ship {
   public length: number;
   public damage: number = 0;
   public sunk: boolean = false;
+  public coordinate: number[][] = [];
 
   constructor(len: number) {
     this.length = len;
