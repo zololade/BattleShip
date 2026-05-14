@@ -9,6 +9,7 @@ export class GameBoard {
     PatrolBoat: new Ship(2),
   };
   public occupied: number[][][] = [];
+  private coordMap = new Map<string, Ship>();
 
   placeShip() {
     for (const [_vehicle, data] of Object.entries(this.vehicles)) {
@@ -32,6 +33,10 @@ export class GameBoard {
         y = Math.floor(Math.random() * 10);
         coordinate = this.coordGen(data.length, [x, y]);
       }
+
+      coordinate.forEach((value) => {
+        this.coordMap.set(`${value[0]}, ${value[1]}`, data);
+      });
       data.coordinate = coordinate;
       this.occupied.push(coordinate);
     }
