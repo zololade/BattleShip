@@ -72,7 +72,6 @@ export class GameBoard {
     let currentShip = this.coordMap.get(`${x}, ${y}`);
     if (currentShip) {
       let currShipCoord = currentShip.coordinate;
-      let prevShipCoord = [...currShipCoord];
 
       //build the current ship Array back
       currShipCoord.forEach((val, index, arr) => {
@@ -85,8 +84,6 @@ export class GameBoard {
           );
         }
       });
-      console.log(this.occupied);
-      console.log(prevShipCoord);
     }
 
     return true;
