@@ -29,4 +29,15 @@ describe("GameBoard class", () => {
       expect(checkVehicleLen()).toBe(true);
     });
   });
+
+  describe("receiveAttack side-effects", () => {
+    test("should test if missed attack is being filled", () => {
+      let quickRandomNum = () => Math.floor(Math.random() * 10);
+      Array.from({ length: 17 })
+        .map(() => [quickRandomNum(), quickRandomNum()])
+        .forEach(([x, y]) => newGame.receiveAttack(x!, y!));
+
+      expect(newGame.missedAttack.length > 0).toBe(true);
+    });
+  });
 });

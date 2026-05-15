@@ -9,6 +9,7 @@ export class GameBoard {
     PatrolBoat: new Ship(2),
   };
   public occupied: number[][][] = [];
+  public missedAttack: number[][] = [];
   private coordMap = new Map<string, Ship>();
 
   placeShip() {
@@ -54,5 +55,18 @@ export class GameBoard {
     ]);
 
     return coordinate;
+  }
+
+  receiveAttack(x: number, y: number) {
+    let currentShip = this.coordMap.has(`${x}, ${y}`)
+      ? this.coordMap.get(`${x}, ${y}`)
+      : undefined;
+
+    if (typeof currentShip === "undefined") {
+      this.missedAttack.push([x, y]);
+      return;
+    }
+
+    currentShip.hit();
   }
 }
