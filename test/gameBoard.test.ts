@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach } from "vitest";
 import { GameBoard } from "../src/lib/GameBoard";
 type Coord = [number, number];
 
-describe("GameBoard class", () => {
+describe("GameBoard", () => {
   let newGame: GameBoard;
   let testArr: Coord[] = [
     [7, 2],
@@ -29,7 +29,7 @@ describe("GameBoard class", () => {
       expect(flatOccupiedCoord.length === setOfOccupiedCoord.size).toBe(true);
     });
 
-    test("should check if non of the vehicles have an empty coordinate", () => {
+    test("should check if none of the vehicles have an empty coordinate", () => {
       let checkVehicleLen = () => {
         for (const [_vehicle, data] of Object.entries(newGame.vehicles)) {
           if (data.coordinate.length <= 0) return false;
@@ -40,7 +40,7 @@ describe("GameBoard class", () => {
     });
   });
 
-  describe("modify coordinate side-effects", () => {
+  describe("modifyCoord side-effects", () => {
     test("should check if entries were updated", () => {
       let coord = newGame.occupied.flat();
       let successState = newGame.modifyCoord(coord[0]!, testArr);
@@ -63,7 +63,7 @@ describe("GameBoard class", () => {
   });
 
   describe("receiveAttack side-effects", () => {
-    test("should check if missed attack is being filled", () => {
+    test("should check if missed attack is being recorded", () => {
       let quickRandomNum = () => Math.floor(Math.random() * 10);
       let attack: Coord[] = Array.from({ length: 17 }).map(() => [
         quickRandomNum(),
