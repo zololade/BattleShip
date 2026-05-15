@@ -8,8 +8,8 @@ export class GameBoard {
     Submarine: new Ship(3),
     PatrolBoat: new Ship(2),
   };
-  public occupied: number[][][] = [];
-  public missedAttack: number[][] = [];
+  public occupied: [number, number][][] = [];
+  public missedAttack: [number, number][] = [];
   private coordMap = new Map<string, Ship>();
 
   placeShip() {
@@ -43,16 +43,18 @@ export class GameBoard {
     }
   }
 
-  private coordGen(len: number, [x, y]: number[]) {
+  private coordGen(len: number, [x, y]: [number, number]): [number, number][] {
     if (typeof x === "undefined" || typeof y === "undefined") return [];
 
     let direction = Math.round(Math.random());
     let signY = y + len > 9 ? -1 : 1;
     let signX = x + len > 9 ? -1 : 1;
-    let coordinate = Array.from({ length: len }).map((_val, index) => [
-      direction > 0 ? x + signX * index : x,
-      direction < 1 ? y + signY * index : y,
-    ]);
+    let coordinate: [number, number][] = Array.from({ length: len }).map(
+      (_val, index) => [
+        direction > 0 ? x + signX * index : x,
+        direction < 1 ? y + signY * index : y,
+      ],
+    );
 
     return coordinate;
   }
