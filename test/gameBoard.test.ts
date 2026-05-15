@@ -31,13 +31,27 @@ describe("GameBoard class", () => {
   });
 
   describe("receiveAttack side-effects", () => {
-    test("should test if missed attack is being filled", () => {
+    test("should check if missed attack is being filled", () => {
       let quickRandomNum = () => Math.floor(Math.random() * 10);
       Array.from({ length: 17 })
         .map(() => [quickRandomNum(), quickRandomNum()])
         .forEach(([x, y]) => newGame.receiveAttack(x!, y!));
 
       expect(newGame.missedAttack.length > 0).toBe(true);
+    });
+
+    test("should check if all ship have been sunk", () => {
+      let coord = newGame.occupied.flat();
+      coord.forEach(([x, y]) => newGame.receiveAttack(x!, y!));
+      let someNotSunk = false;
+
+      for (let [_vehicle, data] of Object.entries(newGame.vehicles)) {
+        if (!data.isSunk()) {
+          someNotSunk = true;
+          break;
+        }
+      }
+      expect(someNotSunk).toBe(false);
     });
   });
 });
