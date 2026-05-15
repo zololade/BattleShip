@@ -1,5 +1,7 @@
 import { Ship } from "./Ship";
 
+type Coord = [number, number];
+
 export class GameBoard {
   public vehicles = {
     Carrier: new Ship(5),
@@ -57,6 +59,34 @@ export class GameBoard {
     );
 
     return coordinate;
+  }
+
+  modifyCoord([x, y]: Coord, coordArr: Coord[]) {
+    // do a quick check to make sure the coordinates coming in are valid
+    let coordValidity = coordArr.some((val) => {
+      return this.coordMap.has(`${val[0]}, ${val[1]}`);
+    });
+    if (coordValidity) return;
+
+    //get currentShip
+    let currentShip = this.coordMap.get(`${x}, ${y}`);
+    if (currentShip) {
+      let currShipCoord = currentShip.coordinate;
+      // let prevShipCoord = [...currShipCoord];
+
+      //build the current ship Array back
+      currShipCoord.forEach((val, index, arr) => {
+        if (coordArr[index]) {
+          arr[index] = coordArr[index];
+          this.coordMap.delete(`${val[0]}, ${val[1]}`);
+
+          this.coordMap.set(
+            `${coordArr[index][0]}, ${coordArr[index][1]}`,
+            currentShip,
+          );
+        }
+      });
+    }
   }
 
   receiveAttack(x: number, y: number) {

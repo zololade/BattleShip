@@ -33,6 +33,27 @@ describe("GameBoard class", () => {
     });
   });
 
+  describe("modify coordinate side-effects", () => {
+    test("should check if entries were updated", () => {
+      let coord = newGame.occupied.flat();
+      newGame.modifyCoord(coord[0]!, [
+        [7, 2],
+        [7, 3],
+        [7, 4],
+        [7, 5],
+        [7, 6],
+      ]);
+
+      expect(newGame.vehicles.Carrier.coordinate).toEqual([
+        [7, 2],
+        [7, 3],
+        [7, 4],
+        [7, 5],
+        [7, 6],
+      ]);
+    });
+  });
+
   describe("receiveAttack side-effects", () => {
     test("should check if missed attack is being filled", () => {
       let quickRandomNum = () => Math.floor(Math.random() * 10);
