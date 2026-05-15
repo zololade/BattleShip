@@ -4,6 +4,13 @@ type Coord = [number, number];
 
 describe("GameBoard class", () => {
   let newGame: GameBoard;
+  let testArr: Coord[] = [
+    [7, 2],
+    [7, 3],
+    [7, 4],
+    [7, 5],
+    [7, 6],
+  ];
   beforeEach(() => {
     newGame = new GameBoard();
     newGame.placeShip();
@@ -36,22 +43,19 @@ describe("GameBoard class", () => {
   describe("modify coordinate side-effects", () => {
     test("should check if entries were updated", () => {
       let coord = newGame.occupied.flat();
-      let successState = newGame.modifyCoord(coord[0]!, [
-        [7, 2],
-        [7, 3],
-        [7, 4],
-        [7, 5],
-        [7, 6],
-      ]);
-
+      let successState = newGame.modifyCoord(coord[0]!, testArr);
       if (successState) {
-        expect(newGame.vehicles.Carrier.coordinate).toEqual([
-          [7, 2],
-          [7, 3],
-          [7, 4],
-          [7, 5],
-          [7, 6],
-        ]);
+        expect(newGame.vehicles.Carrier.coordinate).toEqual(testArr);
+      } else {
+        expect(successState).toBe(false);
+      }
+    });
+
+    test("should check if occupied was updated", () => {
+      let coord = newGame.occupied.flat();
+      let successState = newGame.modifyCoord(coord[0]!, testArr);
+      if (successState) {
+        expect(newGame.occupied).toContainEqual(testArr);
       } else {
         expect(successState).toBe(false);
       }
