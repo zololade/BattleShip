@@ -66,7 +66,7 @@ export class GameBoard {
     let coordValidity = coordArr.some((val) => {
       return this.coordMap.has(`${val[0]}, ${val[1]}`);
     });
-    if (coordValidity) return;
+    if (coordValidity) return false;
 
     //get currentShip
     let currentShip = this.coordMap.get(`${x}, ${y}`);
@@ -87,6 +87,8 @@ export class GameBoard {
         }
       });
     }
+
+    return true;
   }
 
   receiveAttack(x: number, y: number) {
