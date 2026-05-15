@@ -69,4 +69,16 @@ export class GameBoard {
 
     currentShip.hit();
   }
+
+  allSunk() {
+    let someNotSunk = false;
+
+    for (let [_vehicle, data] of Object.entries(this.vehicles)) {
+      if (!data.isSunk()) {
+        someNotSunk = true;
+        break;
+      }
+    }
+    return !someNotSunk;
+  }
 }

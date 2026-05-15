@@ -1,12 +1,14 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, beforeEach } from "vitest";
 import { GameBoard } from "../src/lib/GameBoard";
 
 describe("GameBoard class", () => {
-  let newGame = new GameBoard();
+  let newGame: GameBoard;
+  beforeEach(() => {
+    newGame = new GameBoard();
+    newGame.placeShip();
+  });
 
   describe("placeShip side-effects", () => {
-    newGame.placeShip();
-
     test("should check if occupied coordinate have 5 entries", () => {
       expect(newGame.occupied.length === 5).toBe(true);
     });
@@ -43,15 +45,8 @@ describe("GameBoard class", () => {
     test("should check if all ship have been sunk", () => {
       let coord = newGame.occupied.flat();
       coord.forEach(([x, y]) => newGame.receiveAttack(x!, y!));
-      let someNotSunk = false;
 
-      for (let [_vehicle, data] of Object.entries(newGame.vehicles)) {
-        if (!data.isSunk()) {
-          someNotSunk = true;
-          break;
-        }
-      }
-      expect(someNotSunk).toBe(false);
+      expect(newGame.allSunk()).toBe(true);
     });
   });
 });
