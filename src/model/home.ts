@@ -18,6 +18,7 @@ export const welcomeDetail: PageData = {
         {
           tag: "button",
           class: "btn",
+          id: "randomize",
           content: "Randomize",
         },
         {

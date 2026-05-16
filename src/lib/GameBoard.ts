@@ -14,7 +14,18 @@ export class GameBoard {
   private coordMap = new Map<string, Ship>();
   private receivedAttacks = new Set<string>();
 
+  private reset() {
+    this.missedAttack = [];
+    this.coordMap = new Map<string, Ship>();
+    this.receivedAttacks = new Set<string>();
+    for (const [_vehicle, data] of Object.entries(this.vehicles)) {
+      data.coordinate = [];
+      data.damage = 0;
+    }
+  }
+
   placeShip() {
+    this.reset();
     for (const [_vehicle, data] of Object.entries(this.vehicles)) {
       let x = Math.floor(Math.random() * 10);
       let y = Math.floor(Math.random() * 10);

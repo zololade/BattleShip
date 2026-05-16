@@ -1,5 +1,6 @@
 import "./style.css";
 import { mainContainer, renderView } from "./lib/renderUtilities";
+import "./controllers/eventDelegations";
 
 // initial app load render
 window.addEventListener("load", () => {
