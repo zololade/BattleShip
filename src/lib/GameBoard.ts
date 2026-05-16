@@ -10,8 +10,7 @@ export class GameBoard {
     Submarine: new Ship(3),
     PatrolBoat: new Ship(2),
   };
-  public occupied: [number, number][][] = [];
-  public missedAttack: [number, number][] = [];
+  public missedAttack: Coord[] = [];
   private coordMap = new Map<string, Ship>();
 
   placeShip() {
@@ -19,9 +18,7 @@ export class GameBoard {
       let x = Math.floor(Math.random() * 10);
       let y = Math.floor(Math.random() * 10);
       let coordinate = this.coordGen(data.length, [x, y]);
-      let filledCord = new Set(
-        this.occupied.flat().map((val) => this.coordKey(val)),
-      );
+      let filledCord = new Set(this.coordMap.keys());
       let valid: boolean = false;
       let attempts = 0;
 
@@ -48,7 +45,6 @@ export class GameBoard {
         this.coordMap.set(this.coordKey(value), data);
       });
       data.coordinate = coordinate;
-      this.occupied.push(coordinate);
     }
   }
 
@@ -109,5 +105,19 @@ export class GameBoard {
 
   private coordKey([x, y]: Coord) {
     return `${x},${y}`;
+  }
+
+  get occupied(): Coord[][] {
+    const groups = new Map<Ship, Coord[]>();
+
+    for (const [key, ship] of this.coordMap) {
+      const [x, y] = key.split(",").map(Number);
+
+      if (!groups.has(ship)) groups.set(ship, []);
+      let shipRef = groups.get(ship);
+      if (shipRef && x !== undefined && y !== undefined) shipRef.push([x, y]);
+    }
+
+    return [...groups.values()];
   }
 }

@@ -1,5 +1,6 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { GameBoard } from "../src/lib/GameBoard";
+import { Ship } from "../src/lib/Ship";
 type Coord = [number, number];
 
 describe("GameBoard", () => {
@@ -84,16 +85,49 @@ describe("GameBoard", () => {
 
   describe("one point shift", () => {
     test("should allow shifting a ship by 1 step", () => {
-      let coord = newGame.occupied.flat();
-      let [x, y] = coord[0]!;
-      let currentShip = newGame["coordMap"].get(`${x},${y}`);
-      if (!currentShip) {
-        throw new Error("No ship found at coordinate");
+      const game = new GameBoard();
+
+      // 1. CLEAR ALL RANDOM STATE
+      game.vehicles = {
+        Carrier: new Ship(5),
+        Battleship: new Ship(4),
+        Destroyer: new Ship(3),
+        Submarine: new Ship(3),
+        PatrolBoat: new Ship(2),
+      };
+
+      game["coordMap"] = new Map();
+
+      // 2. PLACE ONLY ONE SHIP MANUALLY (safe space)
+      const ship = game.vehicles.Carrier;
+
+      const original = [
+        [2, 2],
+        [3, 2],
+        [4, 2],
+        [5, 2],
+        [6, 2],
+      ] as [number, number][];
+
+      ship.coordinate = original;
+
+      for (const coord of original) {
+        game["coordMap"].set(`${coord[0]},${coord[1]}`, ship);
       }
-      let shifted = currentShip.coordinate.map(([x, y]) => [x, y + 1] as Coord);
-      let successState = newGame.modifyCoord([x, y], shifted);
-      expect(successState).toBe(true);
-      expect(currentShip.coordinate).toEqual(shifted);
+
+      // 3. SHIFT IT (deterministic)
+      const shifted = original.map(([x, y]) => [x, y + 1] as [number, number]);
+
+      const success = game.modifyCoord(original[0]!, shifted);
+
+      // 4. ASSERT
+      expect(success).toBe(true);
+      expect(ship.coordinate).toEqual(shifted);
+
+      // 5. VERIFY MAP IS CONSISTENT
+      for (const [x, y] of shifted) {
+        expect(game["coordMap"].get(`${x},${y}`)).toBe(ship);
+      }
     });
   });
 });
