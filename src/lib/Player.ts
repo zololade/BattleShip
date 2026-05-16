@@ -2,9 +2,10 @@ import { GameBoard } from "./GameBoard";
 
 export class Player {
   protected opBoard: GameBoard;
-  public ownBoard = new GameBoard();
-  constructor(op: GameBoard) {
+  public ownBoard: GameBoard;
+  constructor(op: GameBoard, own: GameBoard = new GameBoard()) {
     this.opBoard = op;
+    this.ownBoard = own;
   }
 
   attack(x: number, y: number) {
@@ -13,8 +14,8 @@ export class Player {
 }
 
 export class Computer extends Player {
-  constructor(op: GameBoard) {
-    super(op);
+  constructor(op: GameBoard, own: GameBoard = new GameBoard()) {
+    super(op, own);
   }
 
   override attack() {
