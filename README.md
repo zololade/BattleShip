@@ -1,48 +1,4 @@
-# TOP Projects (TypeScript)
-
-This repository contains multiple TypeScript projects built as part of The Odin Project curriculum. Each project focuses on a different core computer science concept and implementation style.
-
----
-
-## 1. Knight Traversal Project
-
-This project demonstrates graph traversal using a breadth-first search (BFS) approach to solve the shortest path problem for a knight on a chessboard.
-
-### Key Concepts
-
-- Breadth-first search (BFS)
-- Graph traversal
-- Queue-based pathfinding
-- Move generation for chess knight rules
-
-### Setup
-
-#### Prerequisites
-
-- Node.js v18+
-
-#### Installation
-
-```bash
-npm install
-````
-
-### Scripts
-
-| Script     | Command              | Description                           |
-| ---------- | -------------------- | ------------------------------------- |
-| Dev        | `npm run dev`        | Run and watch `src/index.ts` with tsx |
-| Build      | `npm run build`      | Compile TypeScript to `dist/`         |
-| Start      | `npm start`          | Run compiled output with Node         |
-| Test       | `npm test`           | Run tests with Vitest                 |
-| Test watch | `npm run test:watch` | Run tests in watch mode               |
-| Lint       | `npm run lint`       | Lint `src/` with ESLint               |
-| Lint fix   | `npm run lint:fix`   | Auto-fix lint issues                  |
-| Format     | `npm run format`     | Format `src/` with Prettier           |
-
----
-
-## 2. Battleship Game Board (TypeScript)
+## Battleship Game Board (TypeScript)
 
 A Battleship-style game engine built in TypeScript. It handles ship placement, collision detection, attacks, and game state tracking on a 10x10 grid.
 
