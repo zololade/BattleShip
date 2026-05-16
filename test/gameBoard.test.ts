@@ -24,7 +24,7 @@ describe("GameBoard", () => {
     test("should check if no coordinate exist more than once", () => {
       let flatOccupiedCoord = newGame.occupied
         .flat()
-        .map((val) => `${val[0]}, ${val[1]}`);
+        .map((val) => `${val[0]},${val[1]}`);
       let setOfOccupiedCoord = new Set(flatOccupiedCoord);
       expect(flatOccupiedCoord.length === setOfOccupiedCoord.size).toBe(true);
     });

@@ -20,13 +20,15 @@ export class GameBoard {
       let y = Math.floor(Math.random() * 10);
       let coordinate = this.coordGen(data.length, [x, y]);
       let filledCord = new Set(
-        this.occupied.flat().map((val) => `${val[0]}, ${val[1]}`),
+        this.occupied.flat().map((val) => this.coordKey(val)),
       );
       let valid: boolean = false;
+      let attempts = 0;
 
-      while (!valid) {
+      while (!valid && attempts < 100) {
+        attempts++;
         let isInOccupied = coordinate.some((val) =>
-          filledCord.has(`${val[0]}, ${val[1]}`),
+          filledCord.has(this.coordKey(val)),
         );
         if (!isInOccupied) {
           valid = true;
@@ -37,8 +39,13 @@ export class GameBoard {
         coordinate = this.coordGen(data.length, [x, y]);
       }
 
+      if (!valid) {
+        throw new Error(
+          `Failed to place ${_vehicle} after 100 attempts. Board layout is too crowded.`,
+        );
+      }
       coordinate.forEach((value) => {
-        this.coordMap.set(`${value[0]}, ${value[1]}`, data);
+        this.coordMap.set(this.coordKey(value), data);
       });
       data.coordinate = coordinate;
       this.occupied.push(coordinate);
@@ -47,7 +54,6 @@ export class GameBoard {
 
   private coordGen(len: number, [x, y]: [number, number]): [number, number][] {
     if (typeof x === "undefined" || typeof y === "undefined") return [];
-
     let direction = Math.round(Math.random());
     let signY = y + len > 9 ? -1 : 1;
     let signX = x + len > 9 ? -1 : 1;
@@ -57,60 +63,48 @@ export class GameBoard {
         direction < 1 ? y + signY * index : y,
       ],
     );
-
     return coordinate;
   }
 
   modifyCoord([x, y]: Coord, coordArr: Coord[]) {
     // do a quick check to make sure the coordinates coming in are valid
     let coordValidity = coordArr.some((val) => {
-      return this.coordMap.has(`${val[0]}, ${val[1]}`);
+      return this.coordMap.has(this.coordKey(val));
     });
     if (coordValidity) return false;
-
     //get currentShip
-    let currentShip = this.coordMap.get(`${x}, ${y}`);
+    let currentShip = this.coordMap.get(this.coordKey([x, y]));
     if (currentShip) {
       let currShipCoord = currentShip.coordinate;
-
       //build the current ship Array back
-      currShipCoord.forEach((val, index, arr) => {
-        if (coordArr[index]) {
-          arr[index] = coordArr[index];
-          this.coordMap.delete(`${val[0]}, ${val[1]}`);
-          this.coordMap.set(
-            `${coordArr[index][0]}, ${coordArr[index][1]}`,
-            currentShip,
-          );
-        }
+      // remove old coords first
+      currShipCoord.forEach((val) => {
+        this.coordMap.delete(this.coordKey(val));
+      });
+      // assign new coords
+      currShipCoord.splice(0, currShipCoord.length, ...coordArr);
+      // add new coords
+      coordArr.forEach((val) => {
+        this.coordMap.set(this.coordKey(val), currentShip);
       });
     }
-
     return true;
   }
 
   receiveAttack(x: number, y: number) {
-    let currentShip = this.coordMap.has(`${x}, ${y}`)
-      ? this.coordMap.get(`${x}, ${y}`)
-      : undefined;
-
+    let currentShip = this.coordMap.get(this.coordKey([x, y]));
     if (typeof currentShip === "undefined") {
       this.missedAttack.push([x, y]);
       return;
     }
-
     currentShip.hit();
   }
 
   allSunk() {
-    let someNotSunk = false;
+    return Object.values(this.vehicles).every((ship) => ship.isSunk());
+  }
 
-    for (let [_vehicle, data] of Object.entries(this.vehicles)) {
-      if (!data.isSunk()) {
-        someNotSunk = true;
-        break;
-      }
-    }
-    return !someNotSunk;
+  private coordKey([x, y]: Coord) {
+    return `${x},${y}`;
   }
 }
