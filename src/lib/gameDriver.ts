@@ -1,7 +1,7 @@
 import { GameBoard } from "./GameBoard";
 import { Computer, Player } from "./Player";
 
-export function driver() {
+function driver() {
   const playerBoard = new GameBoard();
   const computerBoard = new GameBoard();
   const player = new Player(computerBoard, playerBoard);
@@ -17,3 +17,5 @@ export function driver() {
     computer,
   };
 }
+
+export let setupBoard = driver();

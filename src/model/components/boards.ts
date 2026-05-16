@@ -1,7 +1,5 @@
-import { driver } from "../../lib/gameDriver";
+import { setupBoard } from "../../lib/gameDriver";
 import type { PageData } from "../../lib/Page";
-
-let setupBoard = driver();
 
 let playerShipCoord = new Set(
   setupBoard.playerBoard.occupied.flat().map((val) => `${val[0]},${val[1]}`),

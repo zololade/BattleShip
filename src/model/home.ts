@@ -2,7 +2,7 @@ import type { PageData } from "../lib/Page";
 import { boardsView } from "./components/boards";
 
 // The welcome message shown in Section 1 before anything is selected
-export const welcomeDetail: PageData = {
+export const initialView: PageData = {
   tag: "main",
 
   id: "main",
@@ -32,5 +32,5 @@ export const welcomeDetail: PageData = {
 };
 
 export function getHomeData(): PageData {
-  return [welcomeDetail];
+  return [initialView];
 }
