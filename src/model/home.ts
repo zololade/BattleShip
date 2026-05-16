@@ -9,8 +9,23 @@ export const welcomeDetail: PageData = {
   content: [
     {
       tag: "div",
-
       content: [boardsView],
+    },
+    {
+      tag: "div",
+      class: "btnContainer",
+      content: [
+        {
+          tag: "button",
+          class: "btn",
+          content: "Randomize",
+        },
+        {
+          tag: "button",
+          class: "btn",
+          content: "Play",
+        },
+      ],
     },
   ],
 };

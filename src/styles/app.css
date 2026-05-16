@@ -29,5 +29,13 @@
         }
       }
     }
+    .btnContainer {
+      margin-top: 0.5rem;
+      .btn {
+        width: 5rem;
+        text-wrap: nowrap;
+        margin: 0 0.5rem 0 0;
+      }
+    }
   }
 }
