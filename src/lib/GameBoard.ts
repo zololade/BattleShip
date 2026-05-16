@@ -12,6 +12,7 @@ export class GameBoard {
   };
   public missedAttack: Coord[] = [];
   private coordMap = new Map<string, Ship>();
+  private receivedAttacks = new Set<string>();
 
   placeShip() {
     for (const [_vehicle, data] of Object.entries(this.vehicles)) {
@@ -91,12 +92,17 @@ export class GameBoard {
   }
 
   receiveAttack(x: number, y: number) {
+    let coordStr = this.coordKey([x, y]);
+    if (this.receivedAttacks.has(coordStr)) return false;
+
+    this.receivedAttacks.add(coordStr);
     let currentShip = this.coordMap.get(this.coordKey([x, y]));
     if (typeof currentShip === "undefined") {
       this.missedAttack.push([x, y]);
-      return;
+      return true;
     }
     currentShip.hit();
+    return true;
   }
 
   allSunk() {

@@ -81,6 +81,13 @@ describe("GameBoard", () => {
 
       expect(newGame.allSunk()).toBe(true);
     });
+
+    test("should check if same coord is attack twice", () => {
+      newGame.receiveAttack(1, 2);
+      let canBeAttack = newGame.receiveAttack(1, 2);
+
+      expect(canBeAttack).toBe(false);
+    });
   });
 
   describe("one point shift", () => {
