@@ -8,7 +8,7 @@ export const welcomeDetail: PageData = {
   id: "main",
   content: [
     {
-      tag: "h2",
+      tag: "div",
 
       content: [boardsView],
     },

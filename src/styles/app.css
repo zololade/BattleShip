@@ -1,25 +1,32 @@
 #app {
   display: flex;
-  justify-content: center;
-  margin: auto;
+  align-items: center;
+  height: 100dvh;
 
-  #boards {
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
+  main {
+    margin: auto;
 
-    .board {
-      display: grid;
-      /* Creates 10 columns and 10 rows, each 1 fraction of space */
-      grid-template-columns: repeat(10, 1fr);
-      grid-template-rows: repeat(10, 1fr);
-      gap: 2px; /* Optional spacing between cells */
-      width: 500px; /* Adjust as needed */
-      height: 500px;
-      background-color: #333;
+    #boards {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
 
-      .cell {
-        border: 1px solid #cccccc69;
+      .board {
+        display: grid;
+        /* Creates 10 columns and 10 rows, each 1 fraction of space */
+        grid-template-columns: repeat(10, 1fr);
+        grid-template-rows: repeat(10, 1fr);
+        gap: 2px; /* Optional spacing between cells */
+        width: 500px; /* Adjust as needed */
+        height: 500px;
+        background-color: #333;
+
+        .cell {
+          border: 1px solid #cccccc69;
+          &[data-occupied="true"] {
+            background-color: #2e86ab99;
+          }
+        }
       }
     }
   }
