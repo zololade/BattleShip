@@ -7,6 +7,6 @@ describe("Ship class", () => {
     for (let i = 0; i < 3; i++) {
       testShip.hit();
     }
-    expect(testShip.isSunk()).toBe(true);
+    expect(testShip.isSunk).toBe(true);
   });
 });

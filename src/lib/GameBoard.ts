@@ -101,7 +101,7 @@ export class GameBoard {
   }
 
   allSunk() {
-    return Object.values(this.vehicles).every((ship) => ship.isSunk());
+    return Object.values(this.vehicles).every((ship) => ship.isSunk);
   }
 
   private coordKey([x, y]: Coord) {

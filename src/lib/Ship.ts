@@ -1,7 +1,6 @@
 export class Ship {
   public length: number;
-  public damage: number = 0;
-  public sunk: boolean = false;
+  public damage = 0;
   public coordinate: [number, number][] = [];
 
   constructor(len: number) {
@@ -9,14 +8,11 @@ export class Ship {
   }
 
   public hit() {
-    if (!this.isSunk()) {
-      this.damage++;
-      this.sunk = this.damage === this.length;
-      return;
-    }
+    if (this.isSunk) return;
+    this.damage++;
   }
 
-  public isSunk() {
+  get isSunk() {
     return this.damage === this.length;
   }
 }
