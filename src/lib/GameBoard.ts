@@ -67,27 +67,30 @@ export class GameBoard {
   }
 
   modifyCoord([x, y]: Coord, coordArr: Coord[]) {
-    // do a quick check to make sure the coordinates coming in are valid
-    let coordValidity = coordArr.some((val) => {
-      return this.coordMap.has(this.coordKey(val));
-    });
-    if (coordValidity) return false;
     //get currentShip
     let currentShip = this.coordMap.get(this.coordKey([x, y]));
-    if (currentShip) {
-      let currShipCoord = currentShip.coordinate;
-      //build the current ship Array back
-      // remove old coords first
-      currShipCoord.forEach((val) => {
-        this.coordMap.delete(this.coordKey(val));
-      });
-      // assign new coords
-      currShipCoord.splice(0, currShipCoord.length, ...coordArr);
-      // add new coords
-      coordArr.forEach((val) => {
-        this.coordMap.set(this.coordKey(val), currentShip);
-      });
-    }
+    if (!currentShip) return false;
+    ///
+    let oldCoords = new Set(
+      currentShip.coordinate.map((val) => this.coordKey(val)),
+    );
+    let coordValidity = coordArr.some((val) => {
+      let key = this.coordKey(val);
+      return this.coordMap.has(key) && !oldCoords.has(key);
+    });
+    if (coordValidity) return false;
+    ///
+    let currShipCoord = currentShip.coordinate;
+    // remove old coords first
+    currShipCoord.forEach((val) => {
+      this.coordMap.delete(this.coordKey(val));
+    });
+    // assign new coords
+    currShipCoord.splice(0, currShipCoord.length, ...coordArr);
+    // add new coords
+    coordArr.forEach((val) => {
+      this.coordMap.set(this.coordKey(val), currentShip);
+    });
     return true;
   }
 

@@ -81,4 +81,19 @@ describe("GameBoard", () => {
       expect(newGame.allSunk()).toBe(true);
     });
   });
+
+  describe("one point shift", () => {
+    test("should allow shifting a ship by 1 step", () => {
+      let coord = newGame.occupied.flat();
+      let [x, y] = coord[0]!;
+      let currentShip = newGame["coordMap"].get(`${x},${y}`);
+      if (!currentShip) {
+        throw new Error("No ship found at coordinate");
+      }
+      let shifted = currentShip.coordinate.map(([x, y]) => [x, y + 1] as Coord);
+      let successState = newGame.modifyCoord([x, y], shifted);
+      expect(successState).toBe(true);
+      expect(currentShip.coordinate).toEqual(shifted);
+    });
+  });
 });
