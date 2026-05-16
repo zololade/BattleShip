@@ -1,2 +1,12 @@
 import "./style.css";
-console.log("hello");
+import { mainContainer, renderView } from "./lib/renderUtilities";
+
+// initial app load render
+window.addEventListener("load", () => {
+  if (!mainContainer) return;
+  renderView("home");
+});
+
+window.addEventListener("load", () => {
+  document.body.style.opacity = "1";
+});
