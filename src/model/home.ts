@@ -1,20 +1,16 @@
 import type { PageData } from "../lib/Page";
+import { boardsView } from "./components/boards";
 
 // The welcome message shown in Section 1 before anything is selected
 export const welcomeDetail: PageData = {
-  tag: "div",
+  tag: "main",
 
-  id: "projectInfo",
+  id: "main",
   content: [
     {
       tag: "h2",
 
-      content: "Welcome",
-    },
-    {
-      tag: "p",
-
-      content: "start",
+      content: [boardsView],
     },
   ],
 };
