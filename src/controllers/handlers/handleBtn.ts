@@ -43,26 +43,19 @@ function interactionHandler(e: PointerEvent) {
 }
 
 function humanInteraction(cell: HTMLElement) {
+  if (setupBoard.currentPlayer === "computer") return;
   let cordStr = cell.dataset["cord"];
-  let cord = cordStr?.split(",") as [string, string];
-  let [x, y] = cord;
+  if (!cordStr) return;
 
-  let canAttack = setupBoard.player.attack(+x, +y);
+  const [x, y] = cordStr.split(",").map(Number) as [number, number];
+
+  let canAttack = setupBoard.player.attack(x, y);
   if (!canAttack) return;
 
   if (cordStr && setupBoard.computerBoard.missedAttack.has(cordStr)) {
     cell.classList.add("missed");
     setupBoard.currentPlayer = "computer";
-    while (setupBoard.currentPlayer === "computer") {
-      computerReaction();
-      if (
-        setupBoard.playerBoard.allSunk() ||
-        setupBoard.computerBoard.allSunk()
-      ) {
-        gameOver();
-        break;
-      }
-    }
+    setTimeout(computerReaction, 500);
   } else if (
     cordStr &&
     setupBoard.computerBoard.successfulAttack.has(cordStr)
@@ -87,6 +80,13 @@ function computerReaction() {
     setupBoard.currentPlayer = "human";
   } else if (setupBoard.playerBoard.successfulAttack.has(coord)) {
     cell.classList.add("success");
+  }
+  if (setupBoard.playerBoard.allSunk() || setupBoard.computerBoard.allSunk()) {
+    gameOver();
+    return;
+  }
+  if (setupBoard.currentPlayer === "computer") {
+    setTimeout(computerReaction, 500);
   }
 }
 
