@@ -1,7 +1,14 @@
 import { mainContainer } from "../lib/renderUtilities";
-import { handleRandomize } from "./handlers/handleBtn";
+import { handlePlay, handleRandomize } from "./handlers/handleBtn";
 
-const clickHandlers = [{ selector: "#randomize", handler: handleRandomize }];
+const clickHandlers = [
+  { selector: "#randomize", handler: handleRandomize },
+  {
+    selector: "#play",
+    handler: handlePlay,
+  },
+];
+
 mainContainer?.addEventListener("click", (e) => {
   const target = e.target as HTMLElement;
   for (const { selector, handler } of clickHandlers) {

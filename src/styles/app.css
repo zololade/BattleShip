@@ -23,6 +23,7 @@
 
         .cell {
           border: 1px solid #cccccc69;
+          border-radius: 2px;
           &[data-occupied="true"] {
             background-color: #2e86ab99;
             border: 2px solid #cccccc22;

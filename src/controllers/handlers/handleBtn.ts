@@ -21,3 +21,9 @@ export function handleRandomize(_match: Element | null, _e: PointerEvent) {
     if (cell) cell.dataset["occupied"] = "true";
   });
 }
+
+export function handlePlay(_match: Element | null, _e: PointerEvent) {
+  if (!mainContainer) return;
+
+  mainContainer.querySelector("#randomize")?.setAttribute("disabled", "");
+}
