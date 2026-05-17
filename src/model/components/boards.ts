@@ -13,6 +13,10 @@ export const boardsView: PageData = {
   content: [
     {
       tag: "div",
+      id: "overlay",
+    },
+    {
+      tag: "div",
       class: "board",
       id: "playerBoard",
       content: createCells(playerShipCoord),

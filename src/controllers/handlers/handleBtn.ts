@@ -1,5 +1,6 @@
 import { setupBoard } from "../../lib/gameDriver";
-import { mainContainer } from "../../lib/renderUtilities";
+import { mainContainer, renderElement } from "../../lib/renderUtilities";
+import { overlayData } from "../../model/components/overlay";
 
 export function handleRandomize(_match: Element | null, _e: PointerEvent) {
   if (!mainContainer) return;
@@ -42,8 +43,6 @@ function interactionHandler(e: PointerEvent) {
 }
 
 function humanInteraction(cell: HTMLElement) {
-  if (setupBoard.playerBoard.allSunk() || setupBoard.computerBoard.allSunk())
-    return;
   let cordStr = cell.dataset["cord"];
   let cord = cordStr?.split(",") as [string, string];
   let [x, y] = cord;
@@ -55,18 +54,24 @@ function humanInteraction(cell: HTMLElement) {
     cell.classList.add("missed");
     setupBoard.currentPlayer = "computer";
     while (setupBoard.currentPlayer === "computer") {
+      computerReaction();
       if (
         setupBoard.playerBoard.allSunk() ||
         setupBoard.computerBoard.allSunk()
-      )
+      ) {
+        gameOver();
         break;
-      computerReaction();
+      }
     }
   } else if (
     cordStr &&
     setupBoard.computerBoard.successfulAttack.has(cordStr)
   ) {
     cell.classList.add("success");
+  }
+  if (setupBoard.playerBoard.allSunk() || setupBoard.computerBoard.allSunk()) {
+    gameOver();
+    return;
   }
 }
 
@@ -83,4 +88,20 @@ function computerReaction() {
   } else if (setupBoard.playerBoard.successfulAttack.has(coord)) {
     cell.classList.add("success");
   }
+}
+
+function gameOver() {
+  if (!mainContainer) return;
+
+  let computerBoard = mainContainer.querySelector(
+    "#computerBoard",
+  ) as HTMLElement;
+  // let host = mainContainer.querySelector("#boards") as HTMLElement;
+  let overlayMsg = mainContainer.querySelector("#overlay") as HTMLElement;
+  let winner = setupBoard.computerBoard.allSunk() ? "you" : "computer";
+  if (overlayMsg) {
+    renderElement(overlayMsg, overlayData(winner));
+    overlayMsg.style.display = "block";
+  }
+  computerBoard.removeEventListener("click", interactionHandler);
 }
