@@ -41,7 +41,25 @@ export class GameBoard {
         let isInOccupied = coordinate.some((val) =>
           filledCord.has(this.coordKey(val)),
         );
-        if (!isInOccupied) {
+        //closeness check
+        let isClose = false;
+        outerLoop: for (let dx = -1; dx <= 1; dx++) {
+          for (let dy = -1; dy <= 1; dy++) {
+            if (dx === 0 && dy === 0) continue;
+            if (
+              coordinate.some((val) => {
+                return filledCord.has(
+                  this.coordKey([val[0] + dx, val[1] + dy]),
+                );
+              })
+            ) {
+              isClose = true;
+              break outerLoop;
+            }
+          }
+        }
+
+        if (!isInOccupied && !isClose) {
           valid = true;
           break;
         }
