@@ -2,7 +2,7 @@ import { GameBoard } from "./GameBoard";
 import { Computer, Player } from "./Player";
 
 type PlayerInd = "human" | "computer";
-interface Driver {
+export interface Driver {
   playerBoard: GameBoard;
   computerBoard: GameBoard;
   player: Player;
@@ -10,7 +10,7 @@ interface Driver {
   currentPlayer: PlayerInd;
 }
 
-function driver(): Driver {
+export function driver(): Driver {
   let currentPlayer: PlayerInd = "human";
   const playerBoard = new GameBoard();
   const computerBoard = new GameBoard();
@@ -29,4 +29,4 @@ function driver(): Driver {
   };
 }
 
-export let setupBoard = driver();
+export const game = { setupBoard: driver() };

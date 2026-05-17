@@ -25,7 +25,7 @@ export const initialView: PageData = {
           tag: "button",
           class: "btn",
           id: "play",
-          content: "Play",
+          content: "Engage",
         },
       ],
     },

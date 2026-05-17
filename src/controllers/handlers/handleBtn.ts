@@ -1,5 +1,6 @@
-import { setupBoard } from "../../lib/gameDriver";
+import { driver, game } from "../../lib/gameDriver";
 import { mainContainer, renderElement } from "../../lib/renderUtilities";
+import { cellsAndOverlay } from "../../model/components/boards";
 import { overlayData } from "../../model/components/overlay";
 
 export function handleRandomize(_match: Element | null, _e: PointerEvent) {
@@ -10,9 +11,11 @@ export function handleRandomize(_match: Element | null, _e: PointerEvent) {
     delete element.dataset["occupied"];
   });
 
-  setupBoard.playerBoard.placeShip();
+  game.setupBoard.playerBoard.placeShip();
   let playerShipCoord = new Set(
-    setupBoard.playerBoard.occupied.flat().map((val) => `${val[0]},${val[1]}`),
+    game.setupBoard.playerBoard.occupied
+      .flat()
+      .map((val) => `${val[0]},${val[1]}`),
   );
 
   playerShipCoord.forEach((val) => {
@@ -23,8 +26,11 @@ export function handleRandomize(_match: Element | null, _e: PointerEvent) {
   });
 }
 
-export function handlePlay(_match: Element | null, _e: PointerEvent) {
-  if (!mainContainer) return;
+export function handlePlay(match: Element | null, _e: PointerEvent) {
+  if (!mainContainer || !match) return;
+
+  match.textContent = "Retreat";
+  match.setAttribute("id", "retreat");
 
   mainContainer.querySelector("#randomize")?.setAttribute("disabled", "");
   let computerBoard = mainContainer.querySelector(
@@ -35,6 +41,26 @@ export function handlePlay(_match: Element | null, _e: PointerEvent) {
   computerBoard.addEventListener("click", interactionHandler);
 }
 
+export function handleRetreat(match: Element | null, _e: PointerEvent) {
+  if (!mainContainer || !match) return;
+
+  gameOver();
+}
+
+export function handleNewMatch(match: Element | null, _e: PointerEvent) {
+  if (!mainContainer || !match) return;
+
+  let boardsHost = mainContainer.querySelector("#boards") as HTMLElement;
+  if (!boardsHost) return;
+
+  mainContainer.querySelector("#randomize")?.removeAttribute("disabled");
+  match.textContent = "Engage";
+  match.setAttribute("id", "play");
+  game.setupBoard = driver();
+
+  renderElement(boardsHost, cellsAndOverlay());
+}
+//helpers
 function interactionHandler(e: PointerEvent) {
   let target = e.target as HTMLElement;
   let cell = target.closest(`[data-cord]`) as HTMLElement;
@@ -43,26 +69,29 @@ function interactionHandler(e: PointerEvent) {
 }
 
 function humanInteraction(cell: HTMLElement) {
-  if (setupBoard.currentPlayer === "computer") return;
+  if (game.setupBoard.currentPlayer === "computer") return;
   let cordStr = cell.dataset["cord"];
   if (!cordStr) return;
 
   const [x, y] = cordStr.split(",").map(Number) as [number, number];
 
-  let canAttack = setupBoard.player.attack(x, y);
+  let canAttack = game.setupBoard.player.attack(x, y);
   if (!canAttack) return;
 
-  if (cordStr && setupBoard.computerBoard.missedAttack.has(cordStr)) {
+  if (cordStr && game.setupBoard.computerBoard.missedAttack.has(cordStr)) {
     cell.classList.add("missed");
-    setupBoard.currentPlayer = "computer";
+    game.setupBoard.currentPlayer = "computer";
     setTimeout(computerReaction, 500);
   } else if (
     cordStr &&
-    setupBoard.computerBoard.successfulAttack.has(cordStr)
+    game.setupBoard.computerBoard.successfulAttack.has(cordStr)
   ) {
     cell.classList.add("success");
   }
-  if (setupBoard.playerBoard.allSunk() || setupBoard.computerBoard.allSunk()) {
+  if (
+    game.setupBoard.playerBoard.allSunk() ||
+    game.setupBoard.computerBoard.allSunk()
+  ) {
     gameOver();
     return;
   }
@@ -71,34 +100,39 @@ function humanInteraction(cell: HTMLElement) {
 function computerReaction() {
   let board = mainContainer?.querySelector(`#playerBoard`) as HTMLElement;
 
-  let coord = setupBoard.computer.attack();
+  let coord = game.setupBoard.computer.attack();
   let cell = board.querySelector(`[data-cord="${coord}"]`) as HTMLElement;
   if (!cell) return;
 
-  if (setupBoard.playerBoard.missedAttack.has(coord)) {
+  if (game.setupBoard.playerBoard.missedAttack.has(coord)) {
     cell.classList.add("missed");
-    setupBoard.currentPlayer = "human";
-  } else if (setupBoard.playerBoard.successfulAttack.has(coord)) {
+    game.setupBoard.currentPlayer = "human";
+  } else if (game.setupBoard.playerBoard.successfulAttack.has(coord)) {
     cell.classList.add("success");
   }
-  if (setupBoard.playerBoard.allSunk() || setupBoard.computerBoard.allSunk()) {
+  if (
+    game.setupBoard.playerBoard.allSunk() ||
+    game.setupBoard.computerBoard.allSunk()
+  ) {
     gameOver();
     return;
   }
-  if (setupBoard.currentPlayer === "computer") {
+  if (game.setupBoard.currentPlayer === "computer") {
     setTimeout(computerReaction, 500);
   }
 }
 
 function gameOver() {
   if (!mainContainer) return;
-
+  let retreatBtn = mainContainer.querySelector("#retreat") as HTMLElement;
+  retreatBtn.textContent = "New Match";
+  retreatBtn.setAttribute("id", "newMatch");
   let computerBoard = mainContainer.querySelector(
     "#computerBoard",
   ) as HTMLElement;
   // let host = mainContainer.querySelector("#boards") as HTMLElement;
   let overlayMsg = mainContainer.querySelector("#overlay") as HTMLElement;
-  let winner = setupBoard.computerBoard.allSunk() ? "you" : "computer";
+  let winner = game.setupBoard.computerBoard.allSunk() ? "you" : "computer";
   if (overlayMsg) {
     renderElement(overlayMsg, overlayData(winner));
     overlayMsg.style.display = "block";

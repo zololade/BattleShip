@@ -18,8 +18,8 @@ describe("GameBoard", () => {
   });
 
   describe("placeShip side-effects", () => {
-    test("should check if occupied coordinate have 5 entries", () => {
-      expect(newGame.occupied.length === 5).toBe(true);
+    test("should check if occupied coordinate have 10 entries", () => {
+      expect(newGame.occupied.length === 10).toBe(true);
     });
 
     test("should check if no coordinate exist more than once", () => {
@@ -46,7 +46,7 @@ describe("GameBoard", () => {
       let coord = newGame.occupied.flat();
       let successState = newGame.modifyCoord(coord[0]!, testArr);
       if (successState) {
-        expect(newGame.vehicles.Carrier.coordinate).toEqual(testArr);
+        expect(newGame.vehicles.Battleship.coordinate).toEqual(testArr);
       } else {
         expect(successState).toBe(false);
       }
@@ -96,17 +96,22 @@ describe("GameBoard", () => {
 
       // 1. CLEAR ALL RANDOM STATE
       game.vehicles = {
-        Carrier: new Ship(5),
         Battleship: new Ship(4),
-        Destroyer: new Ship(3),
+        Cruiser: new Ship(3),
         Submarine: new Ship(3),
-        PatrolBoat: new Ship(2),
+        Destroyer1: new Ship(2),
+        Destroyer2: new Ship(2),
+        Destroyer3: new Ship(2),
+        PatrolBoat1: new Ship(1),
+        PatrolBoat2: new Ship(1),
+        PatrolBoat3: new Ship(1),
+        PatrolBoat4: new Ship(1),
       };
 
       game["coordMap"] = new Map();
 
       // 2. PLACE ONLY ONE SHIP MANUALLY (safe space)
-      const ship = game.vehicles.Carrier;
+      const ship = game.vehicles.Battleship;
 
       const original = [
         [2, 2],

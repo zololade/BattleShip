@@ -1,11 +1,24 @@
 import { mainContainer } from "../lib/renderUtilities";
-import { handlePlay, handleRandomize } from "./handlers/handleBtn";
+import {
+  handleNewMatch,
+  handlePlay,
+  handleRandomize,
+  handleRetreat,
+} from "./handlers/handleBtn";
 
 const clickHandlers = [
   { selector: "#randomize", handler: handleRandomize },
   {
     selector: "#play",
     handler: handlePlay,
+  },
+  {
+    selector: "#retreat",
+    handler: handleRetreat,
+  },
+  {
+    selector: "#newMatch",
+    handler: handleNewMatch,
   },
 ];
 

@@ -1,16 +1,23 @@
-import { setupBoard } from "../../lib/gameDriver";
+import { game } from "../../lib/gameDriver";
 import type { PageData } from "../../lib/Page";
 
-let playerShipCoord = new Set(
-  setupBoard.playerBoard.occupied.flat().map((val) => `${val[0]},${val[1]}`),
-);
+let playerShipCoord = () =>
+  new Set(
+    game.setupBoard.playerBoard.occupied
+      .flat()
+      .map((val) => `${val[0]},${val[1]}`),
+  );
 
 // The welcome message shown in Section 1 before anything is selected
 export const boardsView: PageData = {
   tag: "div",
   id: "boards",
 
-  content: [
+  content: cellsAndOverlay(),
+};
+
+export function cellsAndOverlay() {
+  return [
     {
       tag: "div",
       id: "overlay",
@@ -19,7 +26,7 @@ export const boardsView: PageData = {
       tag: "div",
       class: "board",
       id: "playerBoard",
-      content: createCells(playerShipCoord),
+      content: createCells(playerShipCoord()),
     },
     {
       tag: "div",
@@ -27,8 +34,8 @@ export const boardsView: PageData = {
       id: "computerBoard",
       content: createCells(),
     },
-  ],
-};
+  ];
+}
 
 // helpers
 function createCells(coordArr?: Set<string>): PageData[] {
