@@ -62,18 +62,24 @@ export class GameBoard {
     }
   }
 
-  private coordGen(len: number, [x, y]: [number, number]): [number, number][] {
-    if (typeof x === "undefined" || typeof y === "undefined") return [];
-    let direction = Math.round(Math.random());
-    let signY = y + len > 9 ? -1 : 1;
-    let signX = x + len > 9 ? -1 : 1;
-    let coordinate: [number, number][] = Array.from({ length: len }).map(
-      (_val, index) => [
-        direction > 0 ? x + signX * index : x,
-        direction < 1 ? y + signY * index : y,
-      ],
-    );
-    return coordinate;
+  private coordGen(len: number, start: [number, number]): [number, number][] {
+    const [sx, sy] = start;
+    const isHorizontal = Math.random() > 0.5;
+
+    let coordinates: [number, number][] = [];
+
+    if (isHorizontal) {
+      const startX = Math.max(0, Math.min(sx, 10 - len));
+      for (let i = 0; i < len; i++) {
+        coordinates.push([startX + i, sy]);
+      }
+    } else {
+      const startY = Math.max(0, Math.min(sy, 10 - len));
+      for (let i = 0; i < len; i++) {
+        coordinates.push([sx, startY + i]);
+      }
+    }
+    return coordinates;
   }
 
   modifyCoord([x, y]: Coord, coordArr: Coord[]) {
