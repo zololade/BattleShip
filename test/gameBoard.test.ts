@@ -72,7 +72,7 @@ describe("GameBoard", () => {
       ]);
       attack.forEach(([x, y]) => newGame.receiveAttack(x, y));
 
-      expect(newGame.missedAttack.length > 0).toBe(true);
+      expect(newGame.missedAttack.size > 0).toBe(true);
     });
 
     test("should check if all ship have been sunk", () => {
