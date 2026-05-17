@@ -28,6 +28,50 @@
             background-color: #2e86ab99;
             border: 2px solid #cccccc22;
           }
+          &.missed {
+            background-color: #2e86ab59;
+            border: 2px solid #cccccc22;
+            display: flex;
+            justify-content: center;
+
+            &::before {
+              content: " ";
+              display: block;
+              text-align: center;
+              background-color: #333;
+              margin: auto;
+              border-radius: 5px;
+              width: 5px;
+              height: 5px; /* Thickness of the X lines */
+            }
+          }
+          &.success {
+            background-color: #2e86ab59;
+            border: 2px solid #cccccc22;
+            overflow: hidden;
+
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &::before,
+            &::after {
+              content: "";
+              position: absolute;
+              width: 150%;
+              height: 3px; /* Thickness of the X lines */
+              background-color: #333; /* Color of the X */
+            }
+
+            &::before {
+              transform: rotate(45deg);
+            }
+
+            &::after {
+              transform: rotate(-45deg);
+            }
+          }
         }
       }
     }

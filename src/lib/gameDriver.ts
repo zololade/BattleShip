@@ -1,7 +1,17 @@
 import { GameBoard } from "./GameBoard";
 import { Computer, Player } from "./Player";
 
-function driver() {
+type PlayerInd = "human" | "computer";
+interface Driver {
+  playerBoard: GameBoard;
+  computerBoard: GameBoard;
+  player: Player;
+  computer: Computer;
+  currentPlayer: PlayerInd;
+}
+
+function driver(): Driver {
+  let currentPlayer: PlayerInd = "human";
   const playerBoard = new GameBoard();
   const computerBoard = new GameBoard();
   const player = new Player(computerBoard, playerBoard);
@@ -15,6 +25,7 @@ function driver() {
     computerBoard,
     player,
     computer,
+    currentPlayer,
   };
 }
 

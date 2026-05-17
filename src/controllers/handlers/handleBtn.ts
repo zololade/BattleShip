@@ -26,4 +26,61 @@ export function handlePlay(_match: Element | null, _e: PointerEvent) {
   if (!mainContainer) return;
 
   mainContainer.querySelector("#randomize")?.setAttribute("disabled", "");
+  let computerBoard = mainContainer.querySelector(
+    "#computerBoard",
+  ) as HTMLElement;
+  if (!computerBoard) return;
+
+  computerBoard.addEventListener("click", interactionHandler);
+}
+
+function interactionHandler(e: PointerEvent) {
+  let target = e.target as HTMLElement;
+  let cell = target.closest(`[data-cord]`) as HTMLElement;
+  if (!cell) return;
+  humanInteraction(cell);
+}
+
+function humanInteraction(cell: HTMLElement) {
+  if (setupBoard.playerBoard.allSunk() || setupBoard.computerBoard.allSunk())
+    return;
+  let cordStr = cell.dataset["cord"];
+  let cord = cordStr?.split(",") as [string, string];
+  let [x, y] = cord;
+
+  let canAttack = setupBoard.player.attack(+x, +y);
+  if (!canAttack) return;
+
+  if (cordStr && setupBoard.computerBoard.missedAttack.has(cordStr)) {
+    cell.classList.add("missed");
+    setupBoard.currentPlayer = "computer";
+    while (setupBoard.currentPlayer === "computer") {
+      if (
+        setupBoard.playerBoard.allSunk() ||
+        setupBoard.computerBoard.allSunk()
+      )
+        break;
+      computerReaction();
+    }
+  } else if (
+    cordStr &&
+    setupBoard.computerBoard.successfulAttack.has(cordStr)
+  ) {
+    cell.classList.add("success");
+  }
+}
+
+function computerReaction() {
+  let board = mainContainer?.querySelector(`#playerBoard`) as HTMLElement;
+
+  let coord = setupBoard.computer.attack();
+  let cell = board.querySelector(`[data-cord="${coord}"]`) as HTMLElement;
+  if (!cell) return;
+
+  if (setupBoard.playerBoard.missedAttack.has(coord)) {
+    cell.classList.add("missed");
+    setupBoard.currentPlayer = "human";
+  } else if (setupBoard.playerBoard.successfulAttack.has(coord)) {
+    cell.classList.add("success");
+  }
 }

@@ -8,8 +8,8 @@ export class Player {
     this.ownBoard = own;
   }
 
-  attack(x: number, y: number) {
-    this.opBoard.receiveAttack(x, y);
+  attack(x: number, y: number): string | boolean {
+    return this.opBoard.receiveAttack(x, y);
   }
 }
 
@@ -19,10 +19,26 @@ export class Computer extends Player {
   }
 
   override attack() {
-    let x = Math.floor(Math.random() * 10);
-    let y = Math.floor(Math.random() * 10);
+    let x, y;
+    let counter = 0;
+    let validAttack = false;
 
-    super.attack(x, y);
+    while (!validAttack && counter < 100) {
+      counter++;
+      x = this.coordGen();
+      y = this.coordGen();
+
+      validAttack = super.attack(x, y) as boolean;
+    }
+    if (counter >= 100) throw new Error("board might be full");
+
+    return [x, y].toString();
+  }
+
+  private coordGen(): number {
+    let num = Math.floor(Math.random() * 10);
+
+    return num;
   }
 }
 

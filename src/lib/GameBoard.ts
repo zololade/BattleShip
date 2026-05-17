@@ -10,12 +10,14 @@ export class GameBoard {
     Submarine: new Ship(3),
     PatrolBoat: new Ship(2),
   };
-  public missedAttack: Coord[] = [];
+  public missedAttack = new Set<string>();
+  public successfulAttack = new Set<string>();
   private coordMap = new Map<string, Ship>();
-  private receivedAttacks = new Set<string>();
+  public receivedAttacks = new Set<string>();
 
   private reset() {
-    this.missedAttack = [];
+    this.missedAttack = new Set<string>();
+    this.successfulAttack = new Set<string>();
     this.coordMap = new Map<string, Ship>();
     this.receivedAttacks = new Set<string>();
     for (const [_vehicle, data] of Object.entries(this.vehicles)) {
@@ -107,12 +109,13 @@ export class GameBoard {
     if (this.receivedAttacks.has(coordStr)) return false;
 
     this.receivedAttacks.add(coordStr);
-    let currentShip = this.coordMap.get(this.coordKey([x, y]));
+    let currentShip = this.coordMap.get(coordStr);
     if (typeof currentShip === "undefined") {
-      this.missedAttack.push([x, y]);
+      this.missedAttack.add(coordStr);
       return true;
     }
     currentShip.hit();
+    this.successfulAttack.add(coordStr);
     return true;
   }
 
