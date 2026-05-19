@@ -1,1 +1,3 @@
-base: "/BattleShip/";
+export default {
+  base: "/BattleShip/",
+};
