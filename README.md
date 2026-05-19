@@ -84,14 +84,6 @@ test/
 
 ---
 
-### Known Behavior
-
-* Ship placement is randomized on each run
-* Ships cannot overlap but can move within their own occupied space
-* Repeated attacks on the same coordinate are not currently blocked
-
----
-
 ### Future Improvements
 
 * Make AI opponent smarter
