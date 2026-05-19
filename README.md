@@ -94,11 +94,9 @@ test/
 
 ### Future Improvements
 
-* Prevent repeated attacks on same coordinate
-* Add CLI or UI interface
-* Add AI opponent
-* Improve separation between board and ship state
-* Add undo/redo system
+* Make AI opponent smarter
+* Add Drag and drop
+* Improve UI
 
 ---
 
