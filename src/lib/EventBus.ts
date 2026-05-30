@@ -1,5 +1,5 @@
 type event = string;
-type action<T> = (data: T) => void;
+type action<T> = (data?: T) => void;
 
 class EventBus {
   private events = new Map<event, action<unknown>[]>();
@@ -17,7 +17,7 @@ class EventBus {
     };
   }
 
-  public publish(ev: event, data: unknown) {
+  public publish(ev: event, data?: unknown) {
     let currEvent = this.events.get(ev);
 
     if (currEvent)

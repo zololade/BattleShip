@@ -1,6 +1,6 @@
+import { eventBus } from "../../lib/EventBus";
 import { driver, game } from "../../lib/gameDriver";
-import { mainContainer, renderElement } from "../../lib/renderUtilities";
-import { cellsAndOverlay } from "../../model/components/boards";
+import { mainContainer } from "../../lib/renderUtilities";
 import { gameOver } from "../helpers/gameOver";
 
 export function handleRandomize(_match: Element | null, _e: PointerEvent) {
@@ -27,18 +27,9 @@ export function handleRetreat(match: Element | null, _e: PointerEvent) {
   gameOver();
 }
 
-export function handleNewMatch(match: Element | null, _e: PointerEvent) {
-  if (!mainContainer || !match) return;
-
-  let boardsHost = mainContainer.querySelector("#boards") as HTMLElement;
-  if (!boardsHost) return;
-
-  mainContainer.querySelector("#randomize")?.removeAttribute("disabled");
-  match.textContent = "Engage";
-  match.setAttribute("id", "play");
+export function handleNewMatch(_match: Element | null, _e: PointerEvent) {
   game.setupBoard = driver();
-
-  renderElement(boardsHost, cellsAndOverlay());
+  eventBus.publish("new:game");
 }
 
 //helpers
