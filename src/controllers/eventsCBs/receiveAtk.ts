@@ -20,7 +20,7 @@ function humanInitAtk(data: unknown) {
     cell.classList.add("success");
   }
   if (dataValue.allSunk) {
-    gameOver();
+    gameOver("You");
     return;
   }
 }
@@ -46,7 +46,7 @@ function computerInitAtk(data: unknown) {
     cell.classList.add("success");
   }
   if (dataValue.allSunk) {
-    gameOver();
+    gameOver("Computer");
     return;
   }
   if (game.setupBoard.currentPlayer === "computer") {

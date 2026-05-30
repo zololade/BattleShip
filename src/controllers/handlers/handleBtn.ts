@@ -24,7 +24,7 @@ export function handlePlay(match: Element | null, _e: PointerEvent) {
 
 export function handleRetreat(match: Element | null, _e: PointerEvent) {
   if (!mainContainer || !match) return;
-  gameOver();
+  gameOver("Computer");
 }
 
 export function handleNewMatch(_match: Element | null, _e: PointerEvent) {
