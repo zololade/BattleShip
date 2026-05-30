@@ -1,3 +1,4 @@
+import { eventBus } from "./EventBus";
 import { GameBoard } from "./GameBoard";
 import { Computer, Player } from "./Player";
 
@@ -12,8 +13,8 @@ export interface Driver {
 
 export function driver(): Driver {
   let currentPlayer: PlayerInd = "human";
-  const playerBoard = new GameBoard();
-  const computerBoard = new GameBoard();
+  const playerBoard = new GameBoard(eventBus);
+  const computerBoard = new GameBoard(eventBus);
   const player = new Player(computerBoard, playerBoard);
   const computer = new Computer(playerBoard, computerBoard);
 

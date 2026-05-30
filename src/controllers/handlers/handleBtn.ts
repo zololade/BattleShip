@@ -4,26 +4,7 @@ import { cellsAndOverlay } from "../../model/components/boards";
 import { overlayData } from "../../model/components/overlay";
 
 export function handleRandomize(_match: Element | null, _e: PointerEvent) {
-  if (!mainContainer) return;
-
-  mainContainer.querySelectorAll("[data-occupied='true']").forEach((currEl) => {
-    let element = currEl as HTMLElement;
-    delete element.dataset["occupied"];
-  });
-
   game.setupBoard.playerBoard.placeShip();
-  let playerShipCoord = new Set(
-    game.setupBoard.playerBoard.occupied
-      .flat()
-      .map((val) => `${val[0]},${val[1]}`),
-  );
-
-  playerShipCoord.forEach((val) => {
-    let cell = mainContainer?.querySelector(
-      `[data-cord="${val}"]`,
-    ) as HTMLElement;
-    if (cell) cell.dataset["occupied"] = "true";
-  });
 }
 
 export function handlePlay(match: Element | null, _e: PointerEvent) {

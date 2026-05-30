@@ -1,6 +1,7 @@
+import { EventBus } from "./EventBus";
 import { Ship } from "./Ship";
 
-type Coord = [number, number];
+export type Coord = [number, number];
 
 export class GameBoard {
   public vehicles = {
@@ -19,6 +20,11 @@ export class GameBoard {
   public successfulAttack = new Set<string>();
   private coordMap = new Map<string, Ship>();
   public receivedAttacks = new Set<string>();
+  private eventBus: EventBus | undefined;
+
+  constructor(eventBus?: EventBus) {
+    if (eventBus) this.eventBus = eventBus;
+  }
 
   private reset() {
     this.missedAttack = new Set<string>();
@@ -80,6 +86,10 @@ export class GameBoard {
       coordinate.forEach((value) => {
         this.coordMap.set(this.coordKey(value), data);
       });
+    }
+
+    if (this.eventBus) {
+      this.eventBus.publish("Refresh player board", this.occupied);
     }
   }
 

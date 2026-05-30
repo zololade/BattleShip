@@ -39,4 +39,4 @@ class EventBus {
 
 const eventBus = new EventBus();
 
-export { eventBus };
+export { EventBus, eventBus };
