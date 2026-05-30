@@ -29,29 +29,9 @@ describe("GameBoard", () => {
       let setOfOccupiedCoord = new Set(flatOccupiedCoord);
       expect(flatOccupiedCoord.length === setOfOccupiedCoord.size).toBe(true);
     });
-
-    test("should check if none of the vehicles have an empty coordinate", () => {
-      let checkVehicleLen = () => {
-        for (const [_vehicle, data] of Object.entries(newGame.vehicles)) {
-          if (data.coordinate.length <= 0) return false;
-        }
-        return true;
-      };
-      expect(checkVehicleLen()).toBe(true);
-    });
   });
 
   describe("modifyCoord side-effects", () => {
-    test("should check if entries were updated", () => {
-      let coord = newGame.occupied.flat();
-      let successState = newGame.modifyCoord(coord[0]!, testArr);
-      if (successState) {
-        expect(newGame.vehicles.Battleship.coordinate).toEqual(testArr);
-      } else {
-        expect(successState).toBe(false);
-      }
-    });
-
     test("should check if occupied was updated", () => {
       let coord = newGame.occupied.flat();
       let successState = newGame.modifyCoord(coord[0]!, testArr);
@@ -121,20 +101,19 @@ describe("GameBoard", () => {
         [6, 2],
       ] as [number, number][];
 
-      ship.coordinate = original;
-
-      for (const coord of original) {
-        game["coordMap"].set(`${coord[0]},${coord[1]}`, ship);
-      }
+      original.forEach((value) => {
+        game["coordMap"].set(game["coordKey"](value), ship);
+      });
 
       // 3. SHIFT IT (deterministic)
       const shifted = original.map(([x, y]) => [x, y + 1] as [number, number]);
+      const shiftedAsStr = shifted.map((val) => val.toString());
 
       const success = game.modifyCoord(original[0]!, shifted);
 
       // 4. ASSERT
       expect(success).toBe(true);
-      expect(ship.coordinate).toEqual(shifted);
+      expect(game.getShipCoord(ship)).toEqual(new Set(shiftedAsStr));
 
       // 5. VERIFY MAP IS CONSISTENT
       for (const [x, y] of shifted) {
