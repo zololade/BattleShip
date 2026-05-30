@@ -1,7 +1,7 @@
 import { driver, game } from "../../lib/gameDriver";
 import { mainContainer, renderElement } from "../../lib/renderUtilities";
 import { cellsAndOverlay } from "../../model/components/boards";
-import { gameOver } from "../eventsCBs/receiveAtk";
+import { gameOver } from "../helpers/gameOver";
 
 export function handleRandomize(_match: Element | null, _e: PointerEvent) {
   game.setupBoard.playerBoard.placeShip();
@@ -24,7 +24,6 @@ export function handlePlay(match: Element | null, _e: PointerEvent) {
 
 export function handleRetreat(match: Element | null, _e: PointerEvent) {
   if (!mainContainer || !match) return;
-
   gameOver();
 }
 
@@ -41,15 +40,13 @@ export function handleNewMatch(match: Element | null, _e: PointerEvent) {
 
   renderElement(boardsHost, cellsAndOverlay());
 }
+
 //helpers
 export function interactionHandler(e: PointerEvent) {
   let target = e.target as HTMLElement;
   let cell = target.closest(`[data-cord]`) as HTMLElement;
   if (!cell) return;
-  humanInteraction(cell);
-}
 
-function humanInteraction(cell: HTMLElement) {
   if (game.setupBoard.currentPlayer === "computer") return;
   let cordStr = cell.dataset["cord"];
   if (!cordStr) return;
