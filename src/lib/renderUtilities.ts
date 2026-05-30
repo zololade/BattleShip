@@ -11,12 +11,15 @@ export const viewMap = {
 let currentView: keyof typeof viewMap | null = null;
 
 // builds page instance and render the page based on view map and its data
-export function renderView(view: keyof typeof viewMap) {
+export function renderView(
+  view: keyof typeof viewMap,
+  afterRender?: () => void,
+) {
   if (!mainContainer) return;
   if (currentView === view) return;
   currentView = view;
   const fromRenderView = true;
-  renderElement(mainContainer, viewMap[view](), fromRenderView);
+  renderElement(mainContainer, viewMap[view](), fromRenderView, afterRender);
 }
 
 // a utility function that render processed data in the supplied host
