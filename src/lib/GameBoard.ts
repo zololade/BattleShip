@@ -26,7 +26,6 @@ export class GameBoard {
     this.coordMap = new Map<string, Ship>();
     this.receivedAttacks = new Set<string>();
     for (const [_vehicle, data] of Object.entries(this.vehicles)) {
-      data.coordinate = [];
       data.damage = 0;
     }
   }
@@ -81,7 +80,6 @@ export class GameBoard {
       coordinate.forEach((value) => {
         this.coordMap.set(this.coordKey(value), data);
       });
-      data.coordinate = coordinate;
     }
   }
 
@@ -108,24 +106,25 @@ export class GameBoard {
   modifyCoord([x, y]: Coord, coordArr: Coord[]) {
     //get currentShip
     let currentShip = this.coordMap.get(this.coordKey([x, y]));
+
     if (!currentShip) return false;
+    const shipLocation = this.shipLocal().get(currentShip);
     ///
-    let oldCoords = new Set(
-      currentShip.coordinate.map((val) => this.coordKey(val)),
-    );
+    let oldCoords =
+      shipLocation && new Set(shipLocation.map((val) => this.coordKey(val)));
+    if (!oldCoords) return false;
+
     let coordValidity = coordArr.some((val) => {
       let key = this.coordKey(val);
       return this.coordMap.has(key) && !oldCoords.has(key);
     });
     if (coordValidity) return false;
-    ///
-    let currShipCoord = currentShip.coordinate;
+
     // remove old coords first
-    currShipCoord.forEach((val) => {
-      this.coordMap.delete(this.coordKey(val));
+    oldCoords.forEach((val) => {
+      this.coordMap.delete(val);
     });
-    // assign new coords
-    currShipCoord.splice(0, currShipCoord.length, ...coordArr);
+
     // add new coords
     coordArr.forEach((val) => {
       this.coordMap.set(this.coordKey(val), currentShip);
@@ -157,6 +156,10 @@ export class GameBoard {
   }
 
   get occupied(): Coord[][] {
+    return [...this.shipLocal().values()];
+  }
+
+  private shipLocal() {
     const groups = new Map<Ship, Coord[]>();
 
     for (const [key, ship] of this.coordMap) {
@@ -167,6 +170,6 @@ export class GameBoard {
       if (shipRef && x !== undefined && y !== undefined) shipRef.push([x, y]);
     }
 
-    return [...groups.values()];
+    return groups;
   }
 }

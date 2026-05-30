@@ -1,7 +1,6 @@
 export class Ship {
   public length: number;
   public damage = 0;
-  public coordinate: [number, number][] = [];
 
   constructor(len: number) {
     this.length = len;
