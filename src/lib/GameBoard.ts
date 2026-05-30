@@ -106,12 +106,9 @@ export class GameBoard {
   modifyCoord([x, y]: Coord, coordArr: Coord[]) {
     //get currentShip
     let currentShip = this.coordMap.get(this.coordKey([x, y]));
-
     if (!currentShip) return false;
-    const shipLocation = this.shipLocal().get(currentShip);
     ///
-    let oldCoords =
-      shipLocation && new Set(shipLocation.map((val) => this.coordKey(val)));
+    let oldCoords = this.getShipCoord(currentShip);
     if (!oldCoords) return false;
 
     let coordValidity = coordArr.some((val) => {
@@ -171,5 +168,12 @@ export class GameBoard {
     }
 
     return groups;
+  }
+
+  getShipCoord(ship: Ship): Set<string> | undefined {
+    const shipLocation = this.shipLocal().get(ship);
+    if (!shipLocation) return undefined;
+    let coords = new Set(shipLocation.map((val) => this.coordKey(val)));
+    return coords;
   }
 }
