@@ -29,7 +29,7 @@ export function handleRetreat(match: Element | null, _e: PointerEvent) {
 
 export function handleNewMatch(_match: Element | null, _e: PointerEvent) {
   game.setupBoard = driver();
-  eventBus.publish("new:game");
+  eventBus.publish("new:game", game.setupBoard.playerBoard.occupied);
 }
 
 //helpers

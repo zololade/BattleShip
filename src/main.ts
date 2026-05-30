@@ -5,11 +5,18 @@ import "./controllers/eventDelegations";
 import "./controllers/eventsCBs/refreshEvent";
 import "./controllers/eventsCBs/receiveAtk";
 import "./controllers/eventsCBs/newGame";
+import { eventBus } from "./lib/EventBus";
+import { game } from "./lib/gameDriver";
 
 // initial app load render
 window.addEventListener("load", () => {
   if (!mainContainer) return;
-  renderView("home");
+  renderView("home", () => {
+    eventBus.publish(
+      "Refresh Human board",
+      game.setupBoard.playerBoard.occupied,
+    );
+  });
 });
 
 window.addEventListener("load", () => {
