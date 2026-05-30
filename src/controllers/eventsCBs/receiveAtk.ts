@@ -12,7 +12,6 @@ function humanInitAtk(data: unknown) {
   );
 
   if (!cell) return;
-  console.log(data);
   if (dataValue.missed) {
     cell.classList.add("missed");
     game.setupBoard.currentPlayer = "computer";

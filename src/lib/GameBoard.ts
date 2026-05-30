@@ -98,7 +98,7 @@ export class GameBoard {
     }
 
     if (this.eventBus) {
-      this.eventBus.publish("Refresh player board", this.occupied);
+      this.eventBus.publish(`Refresh ${this.boardId} board`, this.occupied);
     }
   }
 

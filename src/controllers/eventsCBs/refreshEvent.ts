@@ -25,7 +25,7 @@ function updatePlayerBoard(data: unknown) {
 
 const playerBoardListener = {
   handler: updatePlayerBoard,
-  kill: eventBus.subscribe("Refresh player board", updatePlayerBoard),
+  kill: eventBus.subscribe("Refresh Human board", updatePlayerBoard),
 };
 
 export { playerBoardListener };
