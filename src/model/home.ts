@@ -7,10 +7,7 @@ export const initialView: PageData = {
 
   id: "main",
   content: [
-    {
-      tag: "div",
-      content: [boardsView],
-    },
+    boardsView,
     {
       tag: "div",
       class: "btnContainer",
