@@ -13,8 +13,8 @@ export interface Driver {
 
 export function driver(): Driver {
   let currentPlayer: PlayerInd = "human";
-  const playerBoard = new GameBoard(eventBus);
-  const computerBoard = new GameBoard(eventBus);
+  const playerBoard = new GameBoard("Human", eventBus);
+  const computerBoard = new GameBoard("Computer", eventBus);
   const player = new Player(computerBoard, playerBoard);
   const computer = new Computer(playerBoard, computerBoard);
 

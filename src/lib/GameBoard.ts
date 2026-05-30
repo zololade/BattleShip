@@ -3,6 +3,13 @@ import { Ship } from "./Ship";
 
 export type Coord = [number, number];
 
+export type PayLoad = {
+  coordinate: number[];
+  missed: boolean;
+  hit: boolean;
+  allSunk: null | boolean;
+};
+
 export class GameBoard {
   public vehicles = {
     Battleship: new Ship(4),
@@ -21,9 +28,11 @@ export class GameBoard {
   private coordMap = new Map<string, Ship>();
   public receivedAttacks = new Set<string>();
   private eventBus: EventBus | undefined;
+  private boardId: string = "";
 
-  constructor(eventBus?: EventBus) {
+  constructor(boardId?: string, eventBus?: EventBus) {
     if (eventBus) this.eventBus = eventBus;
+    if (boardId) this.boardId = boardId;
   }
 
   private reset() {
@@ -140,6 +149,13 @@ export class GameBoard {
   }
 
   receiveAttack(x: number, y: number) {
+    const payLoad: PayLoad = {
+      coordinate: [x, y],
+      missed: false,
+      hit: false,
+      allSunk: null,
+    };
+
     let coordStr = this.coordKey([x, y]);
     if (this.receivedAttacks.has(coordStr)) return false;
 
@@ -147,10 +163,17 @@ export class GameBoard {
     let currentShip = this.coordMap.get(coordStr);
     if (typeof currentShip === "undefined") {
       this.missedAttack.add(coordStr);
-      return true;
+      payLoad.missed = true;
+    } else {
+      currentShip.hit();
+      this.successfulAttack.add(coordStr);
+      payLoad.allSunk = this.allSunk();
+      payLoad.hit = true;
     }
-    currentShip.hit();
-    this.successfulAttack.add(coordStr);
+
+    if (this.eventBus) {
+      this.eventBus.publish(`${this.boardId}:attack`, payLoad);
+    }
     return true;
   }
 
