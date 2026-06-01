@@ -102,6 +102,9 @@ export class Computer extends Player {
     size: number,
     sunkCells: Set<string>,
   ) {
+    const activeHits = [...this.opBoard.successfulAttack].filter(
+      (cell) => !sunkCells.has(cell),
+    );
     for (let outer = 0; outer <= 9; outer++) {
       for (let inner = 0; inner <= 10 - size; inner++) {
         //generat coordinates
@@ -115,6 +118,11 @@ export class Computer extends Player {
           (cell) => this.opBoard.missedAttack.has(cell) || sunkCells.has(cell),
         );
         if (notValid) continue;
+        if (
+          activeHits.length > 0 &&
+          !activeHits.every((hit) => cells.includes(hit))
+        )
+          continue;
 
         let hitCount = 0;
         for (const cell of cells) {
