@@ -34,9 +34,10 @@ export class Computer extends Player {
   }
 
   private aiLogic() {
-    let shipsLenRec: number[] = [];
-    let sunkenShip: Ship[] = [];
-    let neigbohrCells = new Set<string>();
+    const shipsLenRec: number[] = [];
+    const sunkenShip: Ship[] = [];
+    const neigbohrCells = new Set<string>();
+    const sunkCells = new Set<string>();
     // create a map of every coordinate
     let cells = Array.from({ length: 100 }).map(
       (_val, index): [string, number] => [this.coordStr(index), 0],
@@ -45,8 +46,11 @@ export class Computer extends Player {
 
     //register all opponets ships length
     for (let [_vehicle, ship] of Object.entries(this.opBoard.vehicles)) {
-      if (!ship.isSunk) shipsLenRec.push(ship.length);
-      if (ship.isSunk) sunkenShip.push(ship);
+      if (ship.isSunk) {
+        sunkenShip.push(ship);
+      } else {
+        shipsLenRec.push(ship.length);
+      }
     }
 
     for (let ship of sunkenShip) {
@@ -57,6 +61,7 @@ export class Computer extends Player {
         );
 
         currShipArr.forEach(([x, y]) => {
+          sunkCells.add(`${x},${y}`);
           for (let dx = -1; dx <= 1; dx++) {
             for (let dy = -1; dy <= 1; dy++) {
               if (dx === 0 && dy === 0) continue;
@@ -72,8 +77,8 @@ export class Computer extends Player {
     }
     //fill horixontal
     for (let size of shipsLenRec) {
-      this.probabilityLogic(true, size);
-      this.probabilityLogic(false, size);
+      this.probabilityLogic(true, size, sunkCells);
+      this.probabilityLogic(false, size, sunkCells);
     }
     neigbohrCells.forEach((val) => {
       this.cellTracker.set(val, 0);
@@ -81,6 +86,7 @@ export class Computer extends Player {
     const unAttackedCells = [...this.cellTracker.entries()].filter(
       ([cell]) => !this.opBoard.receivedAttacks.has(cell),
     );
+    if (unAttackedCells.length === 0) return;
     const highestEntry = unAttackedCells.reduce((max, current) =>
       current[1] > max[1] ? current : max,
     );
@@ -91,7 +97,11 @@ export class Computer extends Player {
     return maxCellsArr[randomNumber];
   }
 
-  private probabilityLogic(isHorizontal: boolean, size: number) {
+  private probabilityLogic(
+    isHorizontal: boolean,
+    size: number,
+    sunkCells: Set<string>,
+  ) {
     for (let outer = 0; outer <= 9; outer++) {
       for (let inner = 0; inner <= 10 - size; inner++) {
         //generat coordinates
@@ -101,19 +111,21 @@ export class Computer extends Player {
             : `${outer},${inner + index}`,
         );
 
-        let notValid = cells.some((cell) =>
-          this.opBoard.missedAttack.has(cell),
+        let notValid = cells.some(
+          (cell) => this.opBoard.missedAttack.has(cell) || sunkCells.has(cell),
         );
         if (notValid) continue;
 
-        const boost = cells.filter((cell) =>
+        const hitCount = cells.filter((cell) =>
           this.opBoard.successfulAttack.has(cell),
         ).length;
 
         cells.forEach((cell) => {
           let cellVal = this.cellTracker.get(cell);
-          if (cellVal !== undefined)
-            this.cellTracker.set(cell, cellVal + 1 + boost * 3);
+          if (cellVal !== undefined) {
+            const weightBonus = hitCount > 0 ? 1 + hitCount * 20 : 1;
+            this.cellTracker.set(cell, cellVal + weightBonus);
+          }
         });
       }
     }
