@@ -120,7 +120,7 @@ export class Computer extends Player {
         if (notValid) continue;
         if (
           activeHits.length > 0 &&
-          !activeHits.every((hit) => cells.includes(hit))
+          !activeHits.some((hit) => cells.includes(hit))
         )
           continue;
 
