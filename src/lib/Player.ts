@@ -22,7 +22,7 @@ export class Computer extends Player {
   }
 
   override attack(): string | boolean {
-    let result = this.aiLogic();
+    let result = this.findBestMove();
     if (result) {
       let [x, y] = result[0].split(",").map(Number);
       if (x !== undefined && y !== undefined) {
@@ -33,9 +33,9 @@ export class Computer extends Player {
     return false;
   }
 
-  private aiLogic() {
-    const shipsLenRec: number[] = [];
-    const sunkenShip: Ship[] = [];
+  private findBestMove(): [string, number] | undefined {
+    const unsunkShipLengths: number[] = [];
+    const sunkenShips: Ship[] = [];
     const neigbohrCells = new Set<string>();
     const sunkCells = new Set<string>();
     // create a map of every coordinate
@@ -47,13 +47,13 @@ export class Computer extends Player {
     //register all opponets ships length
     for (let [_vehicle, ship] of Object.entries(this.opBoard.vehicles)) {
       if (ship.isSunk) {
-        sunkenShip.push(ship);
+        sunkenShips.push(ship);
       } else {
-        shipsLenRec.push(ship.length);
+        unsunkShipLengths.push(ship.length);
       }
     }
 
-    for (let ship of sunkenShip) {
+    for (let ship of sunkenShips) {
       let currShipCoord = this.opBoard.getShipCoord(ship);
       if (currShipCoord) {
         let currShipArr = Array.from(currShipCoord).map((val) =>
@@ -76,7 +76,7 @@ export class Computer extends Player {
       }
     }
     //fill horixontal
-    for (let size of shipsLenRec) {
+    for (let size of unsunkShipLengths) {
       this.probabilityLogic(true, size, sunkCells);
       this.probabilityLogic(false, size, sunkCells);
     }
@@ -116,9 +116,12 @@ export class Computer extends Player {
         );
         if (notValid) continue;
 
-        const hitCount = cells.filter((cell) =>
-          this.opBoard.successfulAttack.has(cell),
-        ).length;
+        let hitCount = 0;
+        for (const cell of cells) {
+          if (this.opBoard.successfulAttack.has(cell)) {
+            hitCount++;
+          }
+        }
 
         cells.forEach((cell) => {
           let cellVal = this.cellTracker.get(cell);
