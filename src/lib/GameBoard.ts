@@ -155,7 +155,7 @@ export class GameBoard {
       hit: false,
       allSunk: null,
     };
-
+    if (x < 0 || x > 9 || y < 0 || y > 9) return false;
     let coordStr = this.coordKey([x, y]);
     if (this.receivedAttacks.has(coordStr)) return false;
 
@@ -208,5 +208,11 @@ export class GameBoard {
     if (!shipLocation) return undefined;
     let coords = new Set(shipLocation.map((val) => this.coordKey(val)));
     return coords;
+  }
+
+  hasShipSunk(x: number, y: number) {
+    let ship = this.coordMap.get(this.coordKey([x, y]));
+    if (!ship) return false;
+    return ship.isSunk;
   }
 }
